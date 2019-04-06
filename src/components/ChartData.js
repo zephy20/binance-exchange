@@ -30,9 +30,6 @@ export default class ChartData extends Component {
     });
   }
   setData = () => {
-    var chartData = this.state.chartData;
-    var newdata = [...this.state.newData];
-
     this.setState({
       newData: [...this.state.newData, this.state.chartData]
     });
@@ -55,11 +52,17 @@ export default class ChartData extends Component {
             )}
           </TypeChooser>
         ) : (
-            <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
-            <span>Loading live data..</span>
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20%"
+            }}
+          >
+            <p>Loading live chart data</p>&nbsp;&nbsp;
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
           </div>
         )}
       </div>

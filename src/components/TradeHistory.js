@@ -78,9 +78,18 @@ export default class TradeHistory extends Component {
             <TableHeaderColumn dataField="time">Time</TableHeaderColumn>
           </BootstrapTable>
         ) : (
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20%"
+            }}
+          >
+            <p>Loading live trade history</p>&nbsp;&nbsp;
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </div>
         )}
       </div>
     );

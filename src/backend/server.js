@@ -22,23 +22,9 @@ server.listen(port, err => {
   console.log("Listening on port " + port);
 });
 
-const io = require("socket.io")(/* the `app` you already created */ server);
-
-// this is essentially a list of functions to call when Binance updates
-const subscriptionsToBinance = new Map();
-
-binance.websockets.prevDay("BNBBTC", (error, response) => {
-  if (error) {
-    return;
-  }
-
-  // I don't know what's on the response but basically you just want the data from it
-  // here we'll iterate over the subscriptions and pass them the data
-  subscriptionsToBinance.forEach(func => func(response));
-});
+const io = require("socket.io")(server);
 
 io.on("connection", socket => {
-  let symbolData = {};
   socket.on("symbol", data => {
     binance.prices(data, (error, ticker) => {
       socket.emit("symbolprice", ticker);
@@ -103,8 +89,16 @@ io.on("connection", socket => {
     });
   });
 
+  socket.on("symbol", data => {
+    binance.websockets.chart(data, "1m", (symbol, interval, chart) => {
+      let tick = binance.last(chart);
+      const last = chart[tick].close;
+
+      socket.emit("lastprice", last);
+    });
+  });
+
   socket.on("disconnect", () => {
     // the connection has ended
-    subscriptionsToBinance.delete(socket);
   });
 });

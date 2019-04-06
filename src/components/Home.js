@@ -149,12 +149,6 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    this.interval = setInterval(() => this.getData(), 3000);
-    // const socket = socketIOClient("http://localhost:5000");
-    // socket.on("update", data => {
-    //   console.log(data);
-    // });
-
     this.getData();
   }
 
@@ -202,8 +196,27 @@ class Home extends React.Component {
 
     return (
       <div className="table-css">
-        <h3>Binance Exchange</h3>
-        <h6>By Kartik V</h6>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+          <div>
+            <h3>Binance Exchange</h3>
+          </div>
+          <div>
+            <p className="h4">Click on any pair to view live data for that</p>
+          </div>
+          <p
+            className="h5"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            Made by Kartik V
+          </p>
+        </div>
+
         <Paper className={classes.root}>
           <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">
@@ -221,12 +234,7 @@ class Home extends React.Component {
                     return (
                       <TableRow tabIndex={-1} key={n.id}>
                         <TableCell component="th" scope="row">
-                          <Link
-                            to={n.symbol}
-                            // onClick={this.handleDialog.bind(this, n.id, n.name)}
-                          >
-                            {n.symbol}
-                          </Link>
+                          <Link to={n.symbol}>{n.symbol}</Link>
                         </TableCell>
 
                         <TableCell align="center">
@@ -259,6 +267,7 @@ class Home extends React.Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         </Paper>
+        <br />
       </div>
     );
   }

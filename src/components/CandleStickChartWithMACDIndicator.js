@@ -54,7 +54,6 @@ const mouseEdgeAppearance = {
 class CandleStickChartWithMACDIndicator extends React.Component {
 	render() {
         const { type, data: initialData, width, ratio } = this.props;
-        console.log(this.props)
 		const ema26 = ema()
 			.id(0)
 			.options({ windowSize: 26 })
@@ -96,7 +95,6 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 			xAccessor,
 			displayXAccessor,
 		} = xScaleProvider(calculatedData);
-        console.log(data)
 		return (
 			<ChartCanvas height={600}
 				width={width}

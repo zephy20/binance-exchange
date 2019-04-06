@@ -13,12 +13,17 @@ export default class PairWidget extends Component {
   componentDidMount() {
     const socket = socketIOClient("http://localhost:5000");
     socket.emit("symbol", this.props.symbol);
+
     socket.on("symboldata", data => {
       if (data.symbol === this.props.symbol) this.setState({ data });
     });
 
     socket.on("symbolprice", data => {
       this.setState({ symbolPrice: Object.values(data) });
+    });
+
+    socket.on("lastprice", data => {
+      this.setState({ lastPrice: data });
     });
   }
 
@@ -35,7 +40,9 @@ export default class PairWidget extends Component {
             <Card.Text>
               <span>
                 Current Price: &nbsp;
-                {this.state.symbolPrice && this.state.symbolPrice}
+                {this.state.lastPrice && this.state.lastPrice
+                  ? this.state.lastPrice
+                  : "-"}
               </span>
               <br />
               <span style={{ display: "flex" }}>
@@ -43,24 +50,28 @@ export default class PairWidget extends Component {
                 <span
                   style={
                     this.state.data && this.state.data.priceChange < 0
-                      ? { color: "red" }
-                      : { color: "green" }
+                      ? { color: "red", fontWeight:"bold" }
+                      : { color: "green", fontWeight:"bold" }
                   }
                 >
                   {this.state.data &&
-                    this.state.data.priceChange &&
-                    this.state.data.priceChange}
+                  this.state.data.priceChange &&
+                  this.state.data.priceChange
+                    ? this.state.data.priceChange
+                    : "-"}
                   &nbsp;
                   {this.state.data &&
                     this.state.data.percentChange &&
-                    this.state.data.percentChange}%
+                    this.state.data.percentChange + "%"}
                 </span>
               </span>
               <span>
                 24h Volume: &nbsp;
                 {this.state.data &&
-                  this.state.data.volume &&
-                  this.state.data.volume}
+                this.state.data.volume &&
+                this.state.data.volume
+                  ? this.state.data.volume
+                  : "-"}
               </span>
             </Card.Text>
           </Card.Body>
