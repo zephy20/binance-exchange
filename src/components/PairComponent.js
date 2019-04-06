@@ -10,16 +10,17 @@ export default class PairComponent extends Component {
     return (
       <div style={{ padding: "5%" }}>
         <div className="row">
-          <div className="col-md-4 col-xs-12">
+          <div className="col-md-6 col-xs-12">
             <PairWidget symbol={this.props.match.params.id} />
           </div>
 
-          <div className="col-md-5 col-xs-12">
+          <div className="col-md-6 col-xs-12">
             <p className="h4">Chart Data</p>
             <ChartData symbol={this.props.match.params.id} />
           </div>
-
-          <div className="col-md-3 col-xs-12">
+        </div>{" "}
+        <div className="row">
+          <div className="col-md-6 col-xs-12">
             <p className="h4">Trade History</p>
             <TradeHistory symbol={this.props.match.params.id} />
           </div>

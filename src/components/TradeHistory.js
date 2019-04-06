@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 import Table from "react-bootstrap/Table";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import Spinner from "react-bootstrap/Spinner";
 
 export default class TradeHistory extends Component {
   constructor(props) {
@@ -64,17 +65,23 @@ export default class TradeHistory extends Component {
   render() {
     return (
       <div>
-        <BootstrapTable data={this.state.rows && this.state.rows} pagination>
-          <TableHeaderColumn
-            dataField="price"
-            columnClassName={this.editPrice.bind(this)}
-            isKey
-          >
-            Price
-          </TableHeaderColumn>
-          <TableHeaderColumn dataField="quantity">Quantity</TableHeaderColumn>
-          <TableHeaderColumn dataField="time">Time</TableHeaderColumn>
-        </BootstrapTable>
+        {this.state.rows.length > 0 ? (
+          <BootstrapTable data={this.state.rows && this.state.rows}>
+            <TableHeaderColumn
+              dataField="price"
+              columnClassName={this.editPrice.bind(this)}
+              isKey
+            >
+              Price
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="quantity">Quantity</TableHeaderColumn>
+            <TableHeaderColumn dataField="time">Time</TableHeaderColumn>
+          </BootstrapTable>
+        ) : (
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        )}
       </div>
     );
   }
