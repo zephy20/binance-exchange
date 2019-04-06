@@ -13,6 +13,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { Button } from "@material-ui/core";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import socketIOClient from "socket.io-client";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,12 +48,7 @@ const rows = [
     disablePadding: true,
     label: "Pair"
   },
-  {
-    id: "calories",
-    numeric: true,
-    disablePadding: false,
-    label: "Coin"
-  },
+
   {
     id: "fat",
     numeric: true,
@@ -153,12 +149,28 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    axios.get("http://localhost:5000/binance/getpairs").then(res => {
-      this.setState({ data: res.data });
-    })
-    .then(err=> {
-      console.log(err)
-    })
+    this.interval = setInterval(() => this.getData(), 3000);
+    // const socket = socketIOClient("http://localhost:5000");
+    // socket.on("update", data => {
+    //   console.log(data);
+    // });
+
+    this.getData();
+  }
+
+  getData = () => {
+    axios
+      .get("http://localhost:5000/binance/getpairs")
+      .then(res => {
+        this.setState({ data: res.data });
+      })
+      .then(err => {
+        console.log(err);
+      });
+  };
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   handleChangePage = (event, page) => {
@@ -210,15 +222,13 @@ class Home extends React.Component {
                       <TableRow tabIndex={-1} key={n.id}>
                         <TableCell component="th" scope="row">
                           <Link
-                            to={n.baseAsset + "_" + n.quoteAsset}
+                            to={n.symbol}
                             // onClick={this.handleDialog.bind(this, n.id, n.name)}
                           >
-                            {n ? n.baseAsset + "/" + n.quoteAsset : ""}
+                            {n.symbol}
                           </Link>
                         </TableCell>
-                        <TableCell align="center">
-                          {n.main ? n.main.temp_max : ""}
-                        </TableCell>
+
                         <TableCell align="center">
                           {n.price ? n.price : ""}
                         </TableCell>

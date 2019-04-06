@@ -35,3 +35,11 @@
 .table-css {
   padding: 10%;
 }
+
+.profit-color {
+  color: green;
+}
+
+.loss-color {
+  color: red;
+}

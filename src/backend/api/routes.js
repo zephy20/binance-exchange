@@ -2,44 +2,27 @@ const express = require("express");
 const baseURL = "https://api.binance.com";
 const binanceRoutes = express.Router();
 const axios = require("axios");
-const binance = require("node-binance-api");
+const Binance = require("node-binance-api");
+const binance = new Binance();
+const io = require("socket.io")();
+const port = 5000 || process.env.PORT;
+
+global.ticker = {};
 
 binanceRoutes.route("/getpairs").get(function(req, res) {
   var data;
-  axios.get(`${baseURL}/api/v1/exchangeInfo`).then(result => {
-    var data = result.data.symbols.filter(item => {
-      if (item.quoteAsset === "BTC") return item;
+  axios.get(`${baseURL}/api/v3/ticker/price`).then(result => {
+    data = result.data.filter(item => {
+      if (item.symbol.includes("BTC", 3)) return item;
     });
-
-    var filtereddata = {};
-
-    Promise.all(
-      data.map((item, id) => {
-        return axios
-          .get(`${baseURL}/api/v3/ticker/price?symbol=${item.symbol}`)
-          .then(res2 => {
-            filtereddata = {
-              baseAsset: item.baseAsset,
-              quoteAsset: item.quoteAsset,
-              symbol: item.symbol,
-              price: res2.data.price
-            };
-            return filtereddata;
-          });
-      })
-    )
-      .then(finalresult => {
-        res.set({
-          "Access-Control-Allow-Origin": "*"
-        });
-        res.send(finalresult);
-      })
-      .catch(err => {
-        res.send(err);
-      });
+    res.set({
+      "Access-Control-Allow-Origin": "*"
+    });
+    res.send(data);
   });
-});
 
+  var filtereddata = {};
+});
 binanceRoutes.route("/getlatestpricesymbol").get(function(req, res) {
   axios
     .get(`${baseURL}/api/v3/ticker/price?symbol=${req.query.symbol}`)
@@ -57,6 +40,23 @@ binanceRoutes.route("/getlatestpricesymbol").get(function(req, res) {
 binanceRoutes.route("/getlatestpricesymbolofall").get(function(req, res) {
   axios
     .get(`${baseURL}/api/v3/ticker/price?symbol=${req.query.symbol}`)
+    .then(result => {
+      res.set({
+        "Access-Control-Allow-Origin": "*"
+      });
+      res.send(result.data);
+    })
+    .catch(err => {
+      res.status(400).send("Unable to get data");
+    });
+});
+
+
+
+binanceRoutes.route("/getdetailsofsymbol").get(function(req, res) {
+  
+  axios
+    .get(`${baseURL}/api/v1/ticker/24hr?symbol=${req.query.symbol}`)
     .then(result => {
       res.set({
         "Access-Control-Allow-Origin": "*"
