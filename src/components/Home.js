@@ -213,7 +213,7 @@ class Home extends React.Component {
             className="h5"
             style={{ display: "flex", justifyContent: "center" }}
           >
-            Made by Kartik V
+            
           </p>
         </div>
 
