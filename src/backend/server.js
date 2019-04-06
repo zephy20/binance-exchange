@@ -63,7 +63,6 @@ io.on("connection", socket => {
         m: maker,
         a: tradeId
       } = trades;
-
       tradeData = {
         price: price,
         quantity: parseFloat(quantity).toFixed(3),
@@ -72,47 +71,6 @@ io.on("connection", socket => {
       socket.emit("tradehistory", tradeData);
     });
   });
-
-  //   binance.websockets.chart([data], "1m", (symbol, interval, chart) => {
-  //     var result = Object.keys(chart).map(time => ({
-  //       ...chart[time]
-  //     }));
-
-  //     let {
-  //       open: open,
-  //       high: high,
-  //       low: low,
-  //       close: close,
-  //       volume: volumn
-  //     } = result;
-
-  //     socket.emit("chartdata", result);
-  //   });
-  // });
-  //   socket.on("chartdata", data => {
-
-  //   // binance.websockets.candlesticks(data, "1m", (candlesticks) => {
-  //   //   let chartdata = {}
-  //   //   let { e:eventType, E:eventTime, s:symbol, k:ticks } = candlesticks;
-  //   //   let { o:open, h:high, l:low, c:close, v:volume, n:trades, i:interval, x:isFinal, q:quoteVolume, V:buyVolume, Q:quoteBuyVolume } = ticks;
-  //   //   // console.log(symbol+" "+interval+" candlestick update");
-  //   //   // console.log("open: "+open);
-  //   //   // console.log("high: "+high);
-  //   //   // console.log("low: "+low);
-  //   //   // console.log("close: "+close);
-  //   //   // console.log("volume: "+volume);
-  //   //   // console.log("isFinal: "+isFinal);
-
-  //   //   chartdata = {
-  //   //     open: open,
-  //   //     high:high,
-  //   //     low:low,
-  //   //     close:close,
-  //   //     volume:volume
-  //   //   };
-  //   //   socket.emit("chartdata", chartdata);
-  //   // });
-  // }
 
   socket.on("chartdata", data => {
     var chartdata = {};
@@ -131,20 +89,16 @@ io.on("connection", socket => {
         V: buyVolume,
         Q: quoteBuyVolume
       } = ticks;
-      // console.log(symbol+" "+interval+" candlestick update");
-      // console.log("open: "+open);
-      // console.log("high: "+high);
-      // console.log("low: "+low);
-      // console.log("close: "+close);
-      // console.log("volume: "+volume);
-      // console.log("isFinal: "+isFinal);
+
       chartdata = {
+        date: moment(eventTime).toDate(),
         open: open,
         high: high,
         low: low,
         close: close,
         volume: volume
       };
+
       socket.emit("chartdata", chartdata);
     });
   });
